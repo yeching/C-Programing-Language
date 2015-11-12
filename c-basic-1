@@ -1,0 +1,92 @@
+/***************************************************************************/
+1.编写一个c程序实例
+
+/*example*/
+#include <stdio.h>
+
+int main()
+{
+   /* 我的第一个 C 程序 */
+   printf("Hello, World! \n");
+   
+   return 0;
+}
+
+1.程序的第一行 #include <stdio.h> 是预处理器指令，告诉 C 编译器在实际编译之前要包含 stdio.h 文件。
+2.下一行 int main() 是主函数，程序从这里开始执行。
+3.下一行 /*...*/ 将会被编译器忽略，这里放置程序的注释内容。它们被称为程序的注释。
+4.下一行 printf(...) 是 C 中另一个可用的函数，会在屏幕上显示消息 "Hello, World!"。
+5.下一行 return 0; 终止 main() 函数，并返回值 0。
+
+/***************************************************************************/
+2.编译 & 执行 C 程序		（最常用的免费可用的编译器是 GNU 的 C/C++ 编译器）
+    打开一个文本编辑器，添加上述代码。
+    保存文件为 hello.c。
+    打开命令提示符，进入到保存文件所在的目录。
+    键入 gcc hello.c，输入回车，编译代码。
+    如果代码中没有错误，命令提示符会跳到下一行，并生成 a.out 可执行文件。
+    现在，键入 a.out 来执行程序。
+    您可以看到屏幕上显示 "Hello World"。
+
+$ gcc hello.c
+$ ./a.out
+Hello, World!
+
+/***************************************************************************/
+3.gcc 编译器的一些常用用法
+
+/*gcc 的简易用法*/
+	3.1 #直接将原始码编译成binary file 档名
+		[root@www ~]# gcc -c hello.c
+		# 会自动的产生 a.out 这个文件
+
+	3.2	# 仅将原始码编译成为目标档，并不制作连结等功能：
+		[root@www ~]# gcc -c hello.c
+		# 会自动的产生 hello.o 这个目标文件，但是并不会产生 binary 运行档。
+		就相当于中间文件，当你有多个文件时，就需要使用这种方式
+		例如：gcc -c hello1.c hello2.c
+             自动产生 hello1.o hello2.o 两个文件
+             最后使用gcc -o hello hello1.o hello2.o将产生hello这个binary file        
+
+	3.3	# 将编译的结果输出成某个特定档名
+		[root@www ~]# gcc -o hello hello.c
+		# -o 后面接的是要输出的 binary file 档名
+
+/*gcc 配合 make 使用*/
+
+当你的原始码文件特别多的时候，进行目标档的编译就非常繁琐，而且当你修改后需要再一次编译，你又得重新输入一遍。
+而当你使用make时，则只需要将他们输入到一个叫做 makefile 文件中就行了。
+
+实例：假设有四个文件 main.c hello1.c hello2.c hello3.c 
+
+一般方法：
+[root@www ~]# gcc -c main.c hello1.c hello2.c hello3.c 
+[root@www ~]#gcc -o main main.o hello1.o hello2.o hello3.o
+[root@www ~]# ./main 
+
+使用make工具：
+# 1. 先编辑 makefile 这个守则档，内容只要作出 main 这个运行档
+
+[root@www ~]# vim makefile
+1 #target: 目标档1 目标档2
+2 #<tab>   gcc -o 欲创建的运行档 目标档1 目标档2
+3 main: main.o hello1.o hello2.o hello3.o
+4         gcc -o main main.o hello1.o hello2.o hello3.o
+5 clean:
+6         rm -f main main.o hello1.o hello2.o hello3.o
+
+#2.使用make编译
+[root@www ~]# make  或者 make main
+cc    -c -o main.o main.c
+cc    -c -o hello1.o hello1.c
+cc    -c -o hello2.o hello2.c
+cc    -c -o hello3.o hello3.c
+gcc -o main main.o hello1.o hello2.o hello3.o
+#3.删除编译的文档
+[root@www ~]# make clean
+rm -f main main.o hello1.o hello2.o hello3.o
+
+注意：详细的make使用请看：http://www.gnu.org/software/make/manual/make.html
+
+
+
